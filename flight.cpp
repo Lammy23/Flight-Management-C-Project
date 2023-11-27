@@ -76,6 +76,6 @@ void Flight::showFlightPassengerList()
     for (int i = 0; i < passenger_list.size(); i++)
     {
         passenger_list[i].showPassengerInfo();
-        printf("--------------------\n");
+        cout << "-----------------------------------" << endl;
     }
 }
