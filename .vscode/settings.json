@@ -2,6 +2,8 @@
     "files.associations": {
         "COMMIT_EDITMSG": "git-commit",
         "iostream": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "ostream": "cpp",
+        "vector": "cpp"
     }
 }

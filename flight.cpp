@@ -56,7 +56,7 @@ void Flight::remove_passenger(Passenger passenger)
 
     for (int i = 0; i < passenger_list.size(); i++)
     {
-        if (passenger_list[i].get_id() == passenger.get_id())
+        if (passenger_list[i].getPassengerID() == passenger.getPassengerID())
         {
             passenger_list.erase(passenger_list.begin() + i);
             cout << "Passenger removed" << endl;
@@ -69,4 +69,13 @@ void Flight::remove_passenger(Passenger passenger)
 void Flight::showFlightSeatMap()
 {
     // Implementation of showFlightSeatMap function goes here
+}
+
+void Flight::showFlightPassengerList()
+{
+    for (int i = 0; i < passenger_list.size(); i++)
+    {
+        passenger_list[i].showPassengerInfo();
+        printf("--------------------\n");
+    }
 }
