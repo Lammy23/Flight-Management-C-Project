@@ -37,31 +37,30 @@ public:
     void showFlightPassengerList();
 };
 
-class Passenger
-{
+class Passenger {
 private:
     int passengerID;
     string firstName;
     string lastName;
     int phoneNumber;
-    Flight *passengerSeat; // FLIGHT CLASS
+    Flight* passengerSeat; 
 
 public:
-    Passenger(int id, string fName, string lName, int phone, Seat *seat);
-    Passenger(const Passenger &other);
-    ~Passenger() {}
+    Passenger(int id, string fName, string lName, int phone, Seat* seat);
+    Passenger(const Passenger& other);
+    ~Passenger();
 
-    int getPassengerID() const { return passengerID; }
-    string getFirstName() const { return firstName; }
-    string getLastName() const { return lastName; }
-    int getPhoneNumber() const { return phoneNumber; }
-    Flight *getPassengerSeat() const { return passengerSeat; }
+    int getPassengerID() const;
+    string getFirstName() const;
+    string getLastName() const;
+    int getPhoneNumber() const;
+    Seat* getPassengerSeat() const;
 
-    void setPassengerID(int id) { passengerID = id; }
-    void setFirstName(const string &fName) { firstName = fName; }
-    void setLastName(const string &lName) { lastName = lName; }
-    void setPhoneNumber(int phone) { phoneNumber = phone; }
-    // void setPassengerSeat(Seat* seat) { passengerSeat = seat; } // Lami commented this line of code
+    void setPassengerID(int id);
+    void setFirstName(const string& fName);
+    void setLastName(const string& lName);
+    void setPhoneNumber(int phone);
+    void setPassengerSeat(Flight* seat);
     void showPassengerInfo(); // Lami added this line of code
 };
 
