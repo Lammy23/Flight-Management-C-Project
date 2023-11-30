@@ -18,9 +18,7 @@ using namespace std;
 int main(void) {
 
 
-    Airline airline("WestJet");
-
-    airline.get_airline_name();
+    cout << "Hello World" << endl;
 
     return 0;
 }

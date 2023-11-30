@@ -3,32 +3,39 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
 
 #include "flight.h"
 
 using namespace std;
 
-class Airline {
+class FlightNode
+{
+public:
+    Flight flight;
+    FlightNode *next;
+
+    FlightNode(Flight flight, FlightNode *next = nullptr) : flight(flight), next(next) {}
+};
+
+class Airline
+{
 private:
     string airline_name;
-    vector<Flight> flight_list;
+    FlightNode *head;
 
 public:
-    Airline(string airline_name);
-    ~Airline(){};
+    Airline(string airline_name) : airline_name(airline_name), head(nullptr) {}
+    ~Airline();
     Airline(const Airline &airline);
     Airline &operator=(const Airline &airline);
 
+    void set_airline_name(string airline_name) { this->airline_name = airline_name; };
     const string get_airline_name() const { return airline_name; };
 
-    void set_airline_name(string airline_name) { this->airline_name = airline_name; };
-
-    void add_flight(Flight flight);
-    void remove_flight(Flight flight);
-
+    void addFlight(Flight flight);
+    void removeFlight(Flight flight);
+    Flight findFlight(string flight_id);
     void showAirlineFlightList();
-    void showAirlinePassengerList();
 };
 
 #endif // AIRLINE_H
