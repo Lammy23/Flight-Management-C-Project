@@ -46,9 +46,9 @@ private:
     Flight* passengerSeat; 
 
 public:
+    Passenger();
     Passenger(int id, string fName, string lName, int phone, Seat* seat);
     Passenger(const Passenger& other);
-    ~Passenger();
 
     int getPassengerID() const;
     string getFirstName() const;
