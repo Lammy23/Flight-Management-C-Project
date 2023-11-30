@@ -42,24 +42,25 @@ private:
     int passengerID;
     string firstName;
     string lastName;
-    int phoneNumber;
+    string phoneNumber;
     Flight* passengerSeat; 
 
 public:
     Passenger();
-    Passenger(int id, string fName, string lName, int phone, Seat* seat);
+    Passenger(int id, string fName, string lName, int phone, Flight* seat);
     Passenger(const Passenger& other);
+    
 
     int getPassengerID() const;
     string getFirstName() const;
     string getLastName() const;
-    int getPhoneNumber() const;
+    string getPhoneNumber() const;
     Seat* getPassengerSeat() const;
 
     void setPassengerID(int id);
     void setFirstName(const string& fName);
     void setLastName(const string& lName);
-    void setPhoneNumber(int phone);
+    void setPhoneNumber (string phone);
     void setPassengerSeat(Flight* seat);
     void showPassengerInfo(); // Lami added this line of code
 };
