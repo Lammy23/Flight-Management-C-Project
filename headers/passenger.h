@@ -1,15 +1,10 @@
 #ifndef PASSENGER_H
 #define PASSENGER_H
-
-#include <iostream>
 #include <string>
-#include <vector>
-
-#include "seat.h" // Lami added this line of code
 
 using namespace std;
 
-class Flight;
+#include "seat.h"
 
 class Passenger
 {
@@ -17,26 +12,27 @@ private:
     int passengerID;
     string firstName;
     string lastName;
-    int phoneNumber;
-    Flight *passengerSeat; // FLIGHT CLASS
+    string phoneNumber;
+    string *passengerSeat;
 
 public:
-    Passenger(int id, string fName, string lName, int phone, Seat *seat);
+    Passenger();
+    Passenger(int id, string fName, string lName, string phone, string *seat);
     Passenger(const Passenger &other);
-    ~Passenger() {}
+    bool operator==(const Passenger &other) const { return passengerID == other.passengerID; };
+    bool operator!=(const Passenger &other) const { return passengerID != other.passengerID; };
 
-    int getPassengerID() const { return passengerID; }
-    string getFirstName() const { return firstName; }
-    string getLastName() const { return lastName; }
-    int getPhoneNumber() const { return phoneNumber; }
-    Flight *getPassengerSeat() const { return passengerSeat; }
+    int getPassengerID() const;
+    string getFirstName() const;
+    string getLastName() const;
+    string getPhoneNumber() const;
+    string *getPassengerSeat() const;
 
-    void setPassengerID(int id) { passengerID = id; }
-    void setFirstName(const string &fName) { firstName = fName; }
-    void setLastName(const string &lName) { lastName = lName; }
-    void setPhoneNumber(int phone) { phoneNumber = phone; }
-    // void setPassengerSeat(Seat* seat) { passengerSeat = seat; } // Lami commented this line of code
-    void showPassengerInfo(); // Lami added this line of code
+    void setPassengerID(int id);
+    void setFirstName(const string &fName);
+    void setLastName(const string &lName);
+    void setPhoneNumber(string phone);
+    void setPassengerSeat(string *seat);
 };
 
 #endif // PASSENGER_H

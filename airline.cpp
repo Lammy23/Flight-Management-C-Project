@@ -22,6 +22,7 @@ Airline::~Airline()
 Airline::Airline(const Airline &airline)
 {
     airline_name = airline.airline_name;
+    num_flights = airline.num_flights;
     head = nullptr;
 
     FlightNode *curr = airline.head;
@@ -41,6 +42,7 @@ Airline &Airline::operator=(const Airline &airline)
     }
 
     airline_name = airline.airline_name;
+    num_flights = airline.num_flights;
 
     FlightNode *curr = head;
     FlightNode *next = nullptr;
@@ -70,6 +72,7 @@ void Airline::addFlight(Flight flight)
     FlightNode *newNode = new FlightNode(flight);
     newNode->next = head;
     head = newNode;
+    num_flights++;
 }
 
 void Airline::removeFlight(Flight flight)
@@ -98,6 +101,7 @@ void Airline::removeFlight(Flight flight)
     }
 
     delete curr;
+    num_flights--;
 }
 
 void Airline::showAirlineFlightList()
@@ -111,7 +115,7 @@ void Airline::showAirlineFlightList()
     }
 }
 
-Flight Airline::findFlight(string flight_id)
+Flight Airline::getFlight(string flight_id)
 {
     FlightNode *curr = head;
 

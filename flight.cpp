@@ -1,48 +1,58 @@
 #include <string>
 #include <iostream>
+#include <iomanip>
 
 #include "headers/flight.h"
 
 using namespace std;
 
-Flight::~Flight() {
-    PassengerNode* curr = head;
-    PassengerNode* next = nullptr;
+Flight::~Flight()
+{
+    PassengerNode *curr = head;
+    PassengerNode *next = nullptr;
 
-    while (curr != nullptr) {
+    while (curr != nullptr)
+    {
         next = curr->next;
         delete curr;
         curr = next;
     }
 }
 
-Flight::Flight(const Flight &flight) {
+Flight::Flight(const Flight &flight)
+{
     flight_id = flight.flight_id;
     rows = flight.rows;
     columns = flight.columns;
     head = nullptr;
+    seat_map = flight.seat_map;
 
-    PassengerNode* curr = flight.head;
+    PassengerNode *curr = flight.head;
 
-    while (curr != nullptr) {
+    while (curr != nullptr)
+    {
         add_passenger(curr->passenger);
         curr = curr->next;
     }
 }
 
-Flight &Flight::operator=(const Flight &flight) {
-    if (this == &flight) {
+Flight &Flight::operator=(const Flight &flight)
+{
+    if (this == &flight)
+    {
         return *this;
     }
 
     flight_id = flight.flight_id;
     rows = flight.rows;
     columns = flight.columns;
+    seat_map = flight.seat_map;
 
-    PassengerNode* curr = head;
-    PassengerNode* next = nullptr;
+    PassengerNode *curr = head;
+    PassengerNode *next = nullptr;
 
-    while (curr != nullptr) {
+    while (curr != nullptr)
+    {
         next = curr->next;
         delete curr;
         curr = next;
@@ -52,7 +62,8 @@ Flight &Flight::operator=(const Flight &flight) {
 
     curr = flight.head;
 
-    while (curr != nullptr) {
+    while (curr != nullptr)
+    {
         add_passenger(curr->passenger);
         curr = curr->next;
     }
@@ -60,45 +71,111 @@ Flight &Flight::operator=(const Flight &flight) {
     return *this;
 }
 
-void Flight::showFlightPassengerList() {
-    PassengerNode* curr = head;
+Passenger Flight::getPassenger(int passenger_id)
+{
+    PassengerNode *curr = head;
 
-    while (curr != nullptr) {
-        // cout << curr->passenger.get_first_name() << " " << curr->passenger.get_last_name() << endl;
-        curr = curr->next;
-    }
-}
-
-void Flight::showFlightSeatMap() {
-    vector<vector<char>> seat_map(rows, vector<char>(columns, 'O'));
-
-    PassengerNode* curr = head;
-
-    while (curr != nullptr) {
-        // seat_map[curr->passenger.get_seat().get_row() - 1][curr->passenger.get_seat().get_column() - 1] = 'X';
-        curr = curr->next;
-    }
-
-    cout << "  ";
-
-    for (int i = 0; i < columns; i++) {
-        cout << i + 1 << " ";
-    }
-
-    cout << endl;
-
-    for (int i = 0; i < rows; i++) {
-        cout << i + 1 << " ";
-
-        for (int j = 0; j < columns; j++) {
-            cout << seat_map[i][j] << " ";
+    while (curr != nullptr)
+    {
+        if (curr->passenger.getPassengerID() == passenger_id)
+        {
+            return curr->passenger;
         }
 
-        cout << endl;
+        curr = curr->next;
+    }
+
+    return Passenger();
+}
+
+string *Flight::getSeat(int row, int column)
+{
+    return &seat_map[row][column];
+}
+
+void Flight::add_passenger(Passenger passenger)
+{
+    PassengerNode *newNode = new PassengerNode(passenger);
+    newNode->next = head;
+    head = newNode;
+}
+
+void Flight::remove_passenger(Passenger passenger)
+{
+    PassengerNode *curr = head;
+    PassengerNode *prev = nullptr;
+
+    while (curr != nullptr)
+    {
+        if (curr->passenger == passenger)
+        {
+            if (prev == nullptr)
+            {
+                head = curr->next;
+            }
+            else
+            {
+                prev->next = curr->next;
+            }
+
+            delete curr;
+            break;
+        }
+
+        prev = curr;
+        curr = curr->next;
     }
 }
 
-ostream &operator<<(ostream &os, const Flight &flight) {
+void Flight::showFlightPassengerList()
+{
+    PassengerNode *curr = head;
+
+    while (curr != nullptr)
+    {
+        cout << curr->passenger.getFirstName() << " " << curr->passenger.getLastName() << endl;
+        curr = curr->next;
+    }
+}
+
+void Flight::showFlightSeatMap()
+{
+
+    cout << "\tAircraft Seat Map\n";
+    cout << "     ";
+
+    for (int i = 0; i < columns; ++i)
+    {
+        cout << (char)('A' + i) << "   ";
+    }
+
+    cout << "\n   ";
+
+    for (int k = 0; k < columns; ++k)
+    {
+        cout << "+---";
+    }
+    cout << "+\n";
+
+    for (int i = 0; i < rows; ++i)
+    {
+        cout << setw(2) << i + 1 << " ";
+        for (int j = 0; j < columns; ++j)
+        {
+            cout << "| " << (seat_map[i][j] == " " ? ' ' : 'X') << " ";
+        }
+        cout << "|\n   ";
+
+        for (int k = 0; k < columns; ++k)
+        {
+            cout << "+---";
+        }
+        cout << "+\n";
+    }
+}
+
+ostream &operator<<(ostream &os, const Flight &flight)
+{
     os << "Flight ID: " << flight.get_flight_id() << endl;
     os << "Rows: " << flight.get_rows() << endl;
     os << "Columns: " << flight.get_columns() << endl;
