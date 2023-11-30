@@ -1,7 +1,8 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include "general.h"
+
+#include "headers/flight.h"
 
 using namespace std;
 

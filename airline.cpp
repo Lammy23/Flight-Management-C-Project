@@ -2,21 +2,10 @@
 #include <string>
 #include <vector>
 
-#include "airline.h"
+#include "headers/airline.h"
 
 using namespace std;
 
-
-Airline::Airline(string airline_name)
-{
-    this->airline_name = airline_name;
-}
-
-Airline::Airline(const Airline &airline)
-{
-    this->airline_name = airline.airline_name;
-    this->flight_list = airline.flight_list;
-}
 
 Airline &Airline::operator=(const Airline &airline)
 {
@@ -27,6 +16,7 @@ Airline &Airline::operator=(const Airline &airline)
     }
     return *this;
 }
+
 
 void Airline::add_flight(Flight flight)
 {

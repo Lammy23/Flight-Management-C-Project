@@ -1,3 +1,5 @@
+#ifndef SEAT_H
+#define SEAT_H
 
 class Seat
 {
@@ -17,3 +19,5 @@ public:
     void setColumnLetter(char colLetter) { columnLetter = colLetter; }
     void setStatus(bool stat) { status = stat; }
 };
+
+#endif // SEAT_H

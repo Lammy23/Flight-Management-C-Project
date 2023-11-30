@@ -1,10 +1,15 @@
+#ifndef PASSENGER_H
+#define PASSENGER_H
+
 #include <iostream>
 #include <string>
 #include <vector>
 
-#include "flight/flight.h"
+#include "seat.h" // Lami added this line of code
 
 using namespace std;
+
+class Flight;
 
 class Passenger
 {
@@ -33,3 +38,5 @@ public:
     // void setPassengerSeat(Seat* seat) { passengerSeat = seat; } // Lami commented this line of code
     void showPassengerInfo(); // Lami added this line of code
 };
+
+#endif // PASSENGER_H

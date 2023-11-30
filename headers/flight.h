@@ -1,7 +1,10 @@
+#ifndef FLIGHT_H
+#define FLIGHT_H
+
 #include <string>
 #include <vector>
 
-#include "passenger/passenger.h"
+#include "passenger.h"
 
 class Flight
 {
@@ -33,3 +36,5 @@ public:
     void showFlightSeatMap();
     void showFlightPassengerList();
 };
+
+#endif // FLIGHT_H

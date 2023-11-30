@@ -1,7 +1,11 @@
+#ifndef AIRLINE_H
+#define AIRLINE_H
+
 #include <iostream>
 #include <string>
 #include <vector>
-#include "flight/flight.h"
+
+#include "flight.h"
 
 using namespace std;
 
@@ -26,3 +30,5 @@ public:
     void showAirlineFlightList();
     void showAirlinePassengerList();
 };
+
+#endif // AIRLINE_H
