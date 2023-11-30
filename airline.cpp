@@ -6,71 +6,124 @@
 
 using namespace std;
 
+Airline::~Airline()
+{
+    FlightNode *curr = head;
+    FlightNode *next = nullptr;
+
+    while (curr != nullptr)
+    {
+        next = curr->next;
+        delete curr;
+        curr = next;
+    }
+}
+
+Airline::Airline(const Airline &airline)
+{
+    airline_name = airline.airline_name;
+    head = nullptr;
+
+    FlightNode *curr = airline.head;
+
+    while (curr != nullptr)
+    {
+        addFlight(curr->flight);
+        curr = curr->next;
+    }
+}
 
 Airline &Airline::operator=(const Airline &airline)
 {
-    if (this != &airline)
+    if (this == &airline)
     {
-        this->airline_name = airline.airline_name;
-        this->flight_list = airline.flight_list;
+        return *this;
     }
+
+    airline_name = airline.airline_name;
+
+    FlightNode *curr = head;
+    FlightNode *next = nullptr;
+
+    while (curr != nullptr)
+    {
+        next = curr->next;
+        delete curr;
+        curr = next;
+    }
+
+    head = nullptr;
+
+    curr = airline.head;
+
+    while (curr != nullptr)
+    {
+        addFlight(curr->flight);
+        curr = curr->next;
+    }
+
     return *this;
 }
 
-
-void Airline::add_flight(Flight flight)
+void Airline::addFlight(Flight flight)
 {
-    flight_list.push_back(flight);
+    FlightNode *newNode = new FlightNode(flight);
+    newNode->next = head;
+    head = newNode;
 }
 
-void Airline::remove_flight(Flight flight)
+void Airline::removeFlight(Flight flight)
 {
-    if (flight_list.size() == 0)
+    FlightNode *curr = head;
+    FlightNode *prev = nullptr;
+
+    while (curr != nullptr && curr->flight != flight)
     {
-        cout << "No flights in this airline" << endl;
+        prev = curr;
+        curr = curr->next;
+    }
+
+    if (curr == nullptr)
+    {
         return;
     }
 
-    for (int i = 0; i < flight_list.size(); i++)
+    if (prev == nullptr)
     {
-        if (flight_list[i].get_flight_id() == flight.get_flight_id())
-        {
-            flight_list.erase(flight_list.begin() + i);
-            cout << "Flight removed" << endl;
-            return;
-        }
+        head = head->next;
     }
-    cout << "Flight not found" << endl;
+    else
+    {
+        prev->next = curr->next;
+    }
+
+    delete curr;
 }
 
 void Airline::showAirlineFlightList()
 {
-    if (flight_list.size() == 0)
-    {
-        cout << "No flights in this airline" << endl;
-        return;
-    }
+    FlightNode *curr = head;
 
-    cout << "Airline: " << airline_name << endl;
-    cout << "Flight List: " << endl;
-    for (int i = 0; i < flight_list.size(); i++)
+    while (curr != nullptr)
     {
-        cout << "Flight ID: " << flight_list[i].get_flight_id() << endl;
+        cout << curr->flight.get_flight_id() << endl;
+        curr = curr->next;
     }
 }
 
-void Airline::showAirlinePassengerList()
+Flight Airline::findFlight(string flight_id)
 {
-    if (flight_list.size() == 0)
+    FlightNode *curr = head;
+
+    while (curr != nullptr && curr->flight.get_flight_id() != flight_id)
     {
-        cout << "No flights in this airline" << endl;
-        return;
+        curr = curr->next;
     }
 
-    cout << "Airline: " << airline_name << endl;
-    cout << "Passenger List: " << endl;
-    for (int i = 0; i < flight_list.size(); i++)
+    if (curr == nullptr)
     {
-        flight_list[i].showFlightPassengerList();
+        return Flight("", 0, 0);
     }
+
+    return curr->flight;
 }
