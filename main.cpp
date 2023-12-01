@@ -92,7 +92,6 @@ void populate_flight_from_file(ifstream &flight_file, Airline &airline)
     // Add flight to airline
     airline.addFlight(flight);
     flight_file.close();
-
 }
 
 void changeFlight(string &flight_id, Airline &airline)
