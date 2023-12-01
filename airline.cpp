@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
+#include <sstream>
 
 #include "headers/airline.h"
 
@@ -19,8 +21,9 @@ Airline::~Airline()
     }
 }
 
-Airline::Airline(const Airline &airline) {
-    cout  << "Copy constructor called" << endl;
+Airline::Airline(const Airline &airline)
+{
+    cout << "Copy constructor called" << endl;
     airline_name = airline.airline_name;
     num_flights = airline.num_flights;
 
@@ -149,3 +152,82 @@ void Airline::showInfo(ostream &stream)
     }
     cout << endl;
 }
+
+void Airline::addFlightFromFile()
+{
+    string file_name;
+    cout << "Enter the file name: ";
+    cin >> file_name;
+
+    ifstream flight_file(file_name);
+
+    // Check if file opened successfully
+    if (flight_file.fail())
+    {
+        cout << "File failed to open" << endl;
+        return;
+    }
+
+    string airline_info;
+    string passenger_info;
+
+    string flight_id, first_name, last_name, phone_number, seat;
+    int rows, columns;
+    int seatrow;
+    char seatcol;
+    int passenger_id;
+
+    // Get the first line of the file (flight info)
+    getline(flight_file, airline_info);
+    istringstream iss(airline_info);
+
+    iss >> flight_id >> rows >> columns;
+
+    // Add flight to airline
+    Flight flight(flight_id, rows, columns);
+    addFlight(flight);
+
+    // Get the passenger info
+    while (getline(flight_file, passenger_info))
+    {
+        // Extract passenger information
+        istringstream iss(passenger_info);
+        string field;
+
+        iss >> first_name;
+        iss.seekg(1, ios::cur); // Skip space
+
+        if (iss.peek() != ' ')
+        {
+            string temp;
+            iss >> temp;
+            first_name += " " + temp;
+        }
+
+        iss >> last_name;
+        iss.seekg(1, ios::cur); // Skip space
+
+        if (iss.peek() != ' ')
+        {
+            string temp;
+            iss >> temp;
+            last_name += " " + temp;
+        }
+
+        iss >> phone_number >> seat >> passenger_id;
+
+        // Split seat into row and column
+        istringstream seat_stream(seat);
+        seat_stream >> seatrow >> seatcol;
+        Seat *flight_seat = getFlight(flight_id).getSeat(seatcol, seatrow);
+
+        // Create a passenger object
+        Passenger passenger(passenger_id, first_name, last_name, phone_number, flight_seat);
+
+        // Add passenger to flight
+        getFlight(flight_id).add_passenger(passenger);
+    }
+
+    flight_file.close();
+}
+
