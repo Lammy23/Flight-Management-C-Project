@@ -19,22 +19,23 @@ public:
     Passenger();
     Passenger(int id, string fName, string lName, string phone, Seat *seat);
     Passenger(const Passenger &other);
+    ~Passenger();
     bool operator==(const Passenger &other) const { return passengerID == other.passengerID; };
     bool operator!=(const Passenger &other) const { return passengerID != other.passengerID; };
 
-    int getPassengerID() const;
-    string getFirstName() const;
-    string getLastName() const;
-    string getPhoneNumber() const;
-    Seat *getPassengerSeat() const;
+    int getPassengerID() const { return passengerID; };
+    string getFirstName() const { return firstName; };
+    string getLastName() const { return lastName; };
+    string getPhoneNumber() const { return phoneNumber; };
+    Seat *getPassengerSeat() const { return passengerSeat; };
 
-    void setPassengerID(int id);
-    void setFirstName(const string &fName);
-    void setLastName(const string &lName);
-    void setPhoneNumber(string phone);
+    void setPassengerID(int id) { passengerID = id; };
+    void setFirstName(string fName) { firstName = fName; };
+    void setLastName(string lName) { lastName = lName; };
+    void setPhoneNumber(string phone) { phoneNumber = phone; };
     void setPassengerSeat(Seat *seat);
 
-    void showInfo();
+    void showInfo(ostream &stream = cout);
 };
 
 #endif // PASSENGER_H

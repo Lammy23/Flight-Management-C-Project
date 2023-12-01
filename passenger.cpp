@@ -15,6 +15,7 @@ Passenger::Passenger(int id, string fName, string lName, string phone, Seat *sea
     firstName = fName;
     lastName = lName;
     phoneNumber = phone;
+    seat->setStatus(true);
     passengerSeat = seat;
     passengerSeat->setStatus(true);
 }
@@ -23,9 +24,9 @@ Passenger::Passenger()
 {
 
     passengerID = 0;
-    firstName = "Unavailable";
-    lastName = "Unavailable";
-    phoneNumber = "Unavailable";
+    firstName = "";
+    lastName = "";
+    phoneNumber = "";
     passengerSeat = nullptr;
 }
 
@@ -39,29 +40,22 @@ Passenger::Passenger(const Passenger &other)
     passengerSeat = other.passengerSeat;
 }
 
-int Passenger::getPassengerID() const { return passengerID; }
-string Passenger::getFirstName() const { return firstName; }
-string Passenger::getLastName() const { return lastName; }
-string Passenger::getPhoneNumber() const { return phoneNumber; }
-Seat *Passenger::getPassengerSeat() const
+Passenger::~Passenger()
 {
-
-    cout << "Passenger Seat: " << passengerSeat->getColumnLetter() << passengerSeat->getRowNumber() << endl;
-    return passengerSeat;
+    passengerID = 0;
+    firstName = "";
+    lastName = "";
+    phoneNumber = "";
+    passengerSeat = nullptr;
 }
 
-void Passenger::setPassengerID(int id) { passengerID = id; }
-void Passenger::setFirstName(const string &fName) { firstName = fName; }
-void Passenger::setLastName(const string &lName) { lastName = lName; }
-void Passenger::setPhoneNumber(string phone) { phoneNumber = phone; }
 void Passenger::setPassengerSeat(Seat *seat)
 {
     passengerSeat = seat;
     passengerSeat->setStatus(true);
 }
 
-void Passenger::showInfo()
+void Passenger::showInfo(ostream &stream)
 {
-    cout << setw(20) << left << firstName << setw(20) << left << lastName << setw(20) << left << phoneNumber << setw(5) << left << passengerSeat->getRowNumber() << setw(5) << left << passengerSeat->getColumnLetter() << setw(10) << left << passengerID << endl;
-    // cout << firstName << "\t\t" << lastName << "\t\t" << phoneNumber << "\t\t" << passengerSeat->getRowNumber() << "\t\t" << passengerSeat->getColumnLetter() << "\t\t" << passengerID << endl;
+    stream << setw(20) << left << firstName << setw(20) << left << lastName << setw(20) << left << phoneNumber << setw(5) << left << passengerSeat->getRowNumber() << setw(5) << left << passengerSeat->getColumnLetter() << setw(10) << left << passengerID << endl;
 }

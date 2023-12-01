@@ -14,6 +14,7 @@ public:
     Passenger passenger;
     PassengerNode *next;
 
+    PassengerNode() : passenger(), next(nullptr) {}
     PassengerNode(Passenger passenger, PassengerNode *next = nullptr) : passenger(passenger), next(next) {}
 };
 
@@ -39,18 +40,19 @@ public:
     const string get_flight_id() const { return flight_id; };
     const int get_rows() const { return rows; };
     const int get_columns() const { return columns; };
-    Passenger getPassenger(int passenger_id);
+    Passenger &getPassenger(int passenger_id);
     Seat *getSeat(char col, int row);
 
     void set_flight_id(string flight_id) { this->flight_id = flight_id; };
     void set_rows(int rows) { this->rows = rows; };
     void set_columns(int columns) { this->columns = columns; };
 
-    void add_passenger(Passenger passenger);
-    void remove_passenger(Passenger passenger);
+    void add_passenger(Passenger &passenger);
+    void remove_passenger(Passenger &passenger);
+    int count_passengers();
 
     void showFlightSeatMap();
-    void showInfo();
+    void showInfo(ostream &stream = cout);
 };
 
 #endif // FLIGHT_H

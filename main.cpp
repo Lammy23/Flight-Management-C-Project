@@ -95,21 +95,104 @@ void populate_flight_from_file(ifstream &flight_file, Airline &airline)
 void displayFlightSeatMap(string flight_id, Airline &airline)
 {
     airline.getFlight(flight_id).showFlightSeatMap();
-    cout << "\n<<Press Enter to continue>> ";
+    cout << "\n<<Press any key to continue>> ";
     cin.clear();
-    cin.ignore(); // Ignore any remaining characters in the input buffer
-    cin.get(); // Wait for the user to press enter
+    cin.ignore();
+    cin.get();
 }
 
 void displayPassengerInfo(string flight_id, Airline &airline)
 {
     airline.getFlight(flight_id).showInfo();
-    cout << "\n<<Press Enter to continue>> ";
+    cout << "\n<<Press any key to continue>> ";
     cin.clear();
+    cin.ignore();
     cin.get();
 }
 
-int menu(Airline &airline)
+void addNewPassenger(string flight_id, Airline &airline)
+{
+    Flight &flight = airline.getFlight(flight_id);
+    int id, row;
+    string firstName, lastName, phoneNumber;
+    char seat;
+
+    cout << "Please enter the passenger ID: ";
+    cin >> id;
+
+    cout << "Please enter the passenger first name: ";
+    getline(cin >> ws, firstName);
+
+    cout << "Please enter the passenger last name: ";
+    getline(cin >> ws, lastName);
+
+    cout << "Please enter the passenger phone number: ";
+    cin >> phoneNumber;
+
+    cout << "Enter the passenger's desired row: ";
+    cin >> row;
+
+    cout << "Enter the passenger's desired seat: ";
+    cin >> seat;
+
+    Passenger passenger(id, firstName, lastName, phoneNumber, flight.getSeat(seat, row));
+    airline.getFlight(flight_id).add_passenger(passenger);
+    cout << "Here is the passenger's information:" << endl;
+    airline.getFlight(flight_id).getPassenger(id).showInfo();
+
+    cout << "\n<<Press any key to continue>> ";
+    cin.clear();
+    cin.ignore();
+    cin.get();
+}
+
+void removePassenger(string flight_id, Airline &airline)
+{
+    int passengerID;
+    cout << "\nEnter the id of the passenger that needs to be removed: ";
+    cin >> passengerID;
+
+    if (airline.getFlight(flight_id).getPassenger(passengerID).getPassengerID() == -1)
+    {
+        cout << "Passenger not found" << endl;
+        return;
+    }
+
+    airline.getFlight(flight_id).remove_passenger(airline.getFlight(flight_id).getPassenger(passengerID));
+
+    cout << "Passenger removed successfully" << endl;
+    cout << "\n<<Press any key to continue>> ";
+    cin.clear();
+    cin.ignore();
+    cin.get();
+}
+
+void saveData(string flight_id, Airline &airline)
+{
+    string file_name;
+    Flight &flight = airline.getFlight(flight_id);
+    cout << "Where would you like to save the data? (Enter the file name):";
+    cin >> file_name;
+
+    ofstream flight_file(file_name);
+
+    if (flight_file.fail())
+    {
+        cout << "File failed to open" << endl;
+        exit(1);
+    }
+
+    airline.showInfo(flight_file);
+
+    flight_file.close();
+    cout << "Data saved successfully" << endl;
+    cout << "\n<<Press any key to continue>> ";
+    cin.clear();
+    cin.ignore();
+    cin.get();
+}
+
+void menu(Airline &airline)
 {
     int input;
     string flight_id;
@@ -119,7 +202,6 @@ int menu(Airline &airline)
     cout << "Enter flight ID: ";
     cin >> flight_id;
     cout << endl;
-
 
     while (true)
     {
@@ -156,6 +238,15 @@ int menu(Airline &airline)
             case 2:
                 displayPassengerInfo(flight_id, airline);
                 break;
+            case 3:
+                addNewPassenger(flight_id, airline);
+                break;
+            case 4:
+                removePassenger(flight_id, airline);
+                break;
+            case 5:
+                saveData(flight_id, airline);
+                break;
             }
         }
 
@@ -164,6 +255,8 @@ int menu(Airline &airline)
             break;
         }
     }
+
+    return;
 }
 
 int main(void)

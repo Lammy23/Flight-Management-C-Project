@@ -33,12 +33,13 @@ public:
     void set_airline_name(string airline_name) { this->airline_name = airline_name; };
     const string get_airline_name() const { return airline_name; };
     const int get_num_flights() const { return num_flights; };
-    Flight getFlight(string flight_id);
+    Flight &getFlight(string flight_id);
 
-    void addFlight(Flight flight);
-    void removeFlight(Flight flight);
+    void addFlight(Flight &flight);
+    void removeFlight(Flight &flight);
 
     void showAirlineFlightList();
+    void showInfo(ostream &stream = cout);
 };
 
 #endif // AIRLINE_H

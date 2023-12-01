@@ -16,7 +16,7 @@ Flight::Flight(string flight_id, int rows, int columns) : flight_id(flight_id), 
     {
         for (int j = 0; j < columns; ++j)
         {
-            seat_map[i][j] = Seat(i + 1, (char)'A' + j);
+            seat_map[i][j] = Seat(i + (size_t)1, (char)('A' + (size_t)j));
         }
     }
 }
@@ -86,7 +86,7 @@ Flight &Flight::operator=(const Flight &flight)
     return *this;
 }
 
-Passenger Flight::getPassenger(int passenger_id)
+Passenger &Flight::getPassenger(int passenger_id)
 {
     PassengerNode *curr = head;
 
@@ -100,7 +100,8 @@ Passenger Flight::getPassenger(int passenger_id)
         curr = curr->next;
     }
 
-    return Passenger();
+    cout << "Passenger not found" << endl;
+    return curr->passenger;
 }
 
 Seat *Flight::getSeat(char col, int row)
@@ -111,20 +112,45 @@ Seat *Flight::getSeat(char col, int row)
     if (col_index < 0 || col_index >= columns || row_index < 0 || row_index >= rows)
     {
         cout << "Invalid seat" << endl;
-        return nullptr;
+        static Seat *dummy_seat = new Seat(-1, ' ');
+        return dummy_seat;
     }
 
     return &seat_map[row_index][col_index];
 }
 
-void Flight::add_passenger(const Passenger passenger)
+void Flight::add_passenger(Passenger &passenger)
 {
-    PassengerNode *newNode = new PassengerNode(passenger);
-    newNode->next = head;
-    head = newNode;
+    PassengerNode *curr = head;
+    PassengerNode *prev = nullptr;
+
+    while (curr != nullptr)
+    {
+        if (curr->passenger == passenger)
+        {
+            cout << "Passenger already exists" << endl;
+            return;
+        }
+
+        prev = curr;
+        curr = curr->next;
+    }
+
+    PassengerNode *new_node = new PassengerNode(passenger, nullptr);
+    // new_node->passenger = passenger;
+    // new_node->next = nullptr;
+
+    if (prev == nullptr)
+    {
+        head = new_node;
+    }
+    else
+    {
+        prev->next = new_node;
+    }
 }
 
-void Flight::remove_passenger(Passenger passenger)
+void Flight::remove_passenger(Passenger &passenger)
 {
     PassengerNode *curr = head;
     PassengerNode *prev = nullptr;
@@ -141,6 +167,15 @@ void Flight::remove_passenger(Passenger passenger)
             {
                 prev->next = curr->next;
             }
+            curr->passenger.getPassengerSeat()->setStatus(false);
+
+            int row_index = curr->passenger.getPassengerSeat()->getRowNumber() - 1;
+            int col_index = (int)curr->passenger.getPassengerSeat()->getColumnLetter() - (int)'A';
+
+            if (row_index >= 0 && row_index < rows && col_index >= 0 && col_index < columns)
+            {
+                seat_map[row_index][col_index].setStatus(false);
+            }
 
             delete curr;
             break;
@@ -151,26 +186,44 @@ void Flight::remove_passenger(Passenger passenger)
     }
 }
 
-void Flight::showInfo()
+int Flight::count_passengers()
 {
+    int count = 0;
     PassengerNode *curr = head;
-
-    cout << setw(20) << left << "First Name" << setw(20) << left << "Last Name" << setw(20) << left << "Phone Number" << setw(5) << left << "Row" << setw(5) << left << "Seat" << setw(10) << left << "ID" << endl;
-    
-    for (int i = 0; i < 80; ++i)
-    {
-        cout << "-";
-    }
-    cout << endl;
 
     while (curr != nullptr)
     {
-        curr->passenger.showInfo();
+        count++;
+        curr = curr->next;
+    }
+
+    return count;
+}
+
+void Flight::showInfo(ostream &stream)
+{
+    PassengerNode *curr = head;
+
+    stream << "Flight ID: " << flight_id << endl;
+    stream << "Rows: " << rows << endl;
+    stream << "Columns: " << columns << endl;
+
+    stream << setw(20) << left << "First Name" << setw(20) << left << "Last Name" << setw(20) << left << "Phone Number" << setw(5) << left << "Row" << setw(5) << left << "Seat" << setw(10) << left << "ID" << endl;
+
+    for (int i = 0; i < 80; ++i)
+    {
+        stream << "-";
+    }
+    stream << endl;
+
+    while (curr != nullptr)
+    {
+        curr->passenger.showInfo(stream);
         for (int i = 0; i < 80; ++i)
         {
-            cout << "-";
+            stream << "-";
         }
-        cout << endl;
+        stream << endl;
 
         // cout << curr->passenger.getFirstName() << " " << curr->passenger.getLastName() << endl;
         curr = curr->next;
@@ -211,13 +264,4 @@ void Flight::showFlightSeatMap()
         }
         cout << "+\n";
     }
-}
-
-ostream &operator<<(ostream &os, const Flight &flight)
-{
-    os << "Flight ID: " << flight.get_flight_id() << endl;
-    os << "Rows: " << flight.get_rows() << endl;
-    os << "Columns: " << flight.get_columns() << endl;
-
-    return os;
 }
