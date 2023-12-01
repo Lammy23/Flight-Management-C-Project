@@ -151,24 +151,8 @@ void saveData(string &flight_id, Airline &airline)
 
 void addFlightFromFile(Airline &airline)
 {
-    string file_name;
-    cout << "Enter the file name: ";
-    cin >> file_name;
-
-    ifstream flight_file(file_name);
-
-    if (flight_file.fail())
-    {
-        cout << "File failed to open" << endl;
-        return;
-    }
-
     populate_flight_from_file(airline);
     cout << "Flight added successfully" << endl;
-    cout << "\n<<Press any key to continue>> ";
-    cin.clear();
-    cin.ignore();
-    cin.get();
 }
 
 void menu(string airline_name = "WesJet")
