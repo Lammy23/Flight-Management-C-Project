@@ -36,6 +36,7 @@ public:
     Flight &getFlight(string flight_id);
 
     void addFlight(Flight &flight);
+    void addFlightFromFile();
     void removeFlight(Flight &flight);
 
     void showAirlineFlightList();

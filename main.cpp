@@ -26,72 +26,14 @@ void display_header()
     cin.get();
 }
 
-void populate_flight_from_file(ifstream &flight_file, Airline &airline)
+void populate_flight_from_file(Airline &airline)
 {
-
-    string airline_info;
-    string passenger_info;
-
-    string flight_id, first_name, last_name, phone_number, seat;
-    int rows, columns;
-    int seatrow;
-    char seatcol;
-    int passenger_id;
-
-    // Get the first line of the file (flight info)
-    getline(flight_file, airline_info);
-    istringstream iss(airline_info);
-
-    iss >> flight_id >> rows >> columns;
-
-    // Create a flight object
-    Flight flight(flight_id, rows, columns);
-
-    // Get the passenger info
-    while (getline(flight_file, passenger_info))
-    {
-        // getline(flight_file, passenger_info);
-        // Extract passenger information
-        istringstream iss(passenger_info);
-        string field;
-
-        iss >> first_name;
-        iss.seekg(1, ios::cur); // Skip space
-
-        if (iss.peek() != ' ')
-        {
-            string temp;
-            iss >> temp;
-            first_name += " " + temp;
-        }
-
-        iss >> last_name;
-        iss.seekg(1, ios::cur); // Skip space
-
-        if (iss.peek() != ' ')
-        {
-            string temp;
-            iss >> temp;
-            last_name += " " + temp;
-        }
-
-        iss >> phone_number >> seat >> passenger_id;
-
-        // Split seat into row and column
-        istringstream seat_stream(seat);
-        seat_stream >> seatrow >> seatcol;
-        Seat *flight_seat = flight.getSeat(seatcol, seatrow);
-
-        // Create a passenger object
-        Passenger passenger(passenger_id, first_name, last_name, phone_number, flight_seat);
-
-        // Add passenger to flight
-        flight.add_passenger(passenger);
-    }
-
-    // Add flight to airline
-    airline.addFlight(flight);
-    flight_file.close();
+    airline.addFlightFromFile();
+    cout << "Flight added successfully" << endl;
+    cout << "\n<<Press any key to continue>> ";
+    cin.clear();
+    cin.ignore();
+    cin.get();
 }
 
 void changeFlight(string &flight_id, Airline &airline)
@@ -221,7 +163,7 @@ void addFlightFromFile(Airline &airline)
         return;
     }
 
-    populate_flight_from_file(flight_file, airline);
+    populate_flight_from_file(airline);
     cout << "Flight added successfully" << endl;
     cout << "\n<<Press any key to continue>> ";
     cin.clear();
@@ -232,18 +174,9 @@ void addFlightFromFile(Airline &airline)
 void menu(string airline_name = "WesJet")
 {
     Airline airline(airline_name);
-    // Open flight file
-    ifstream flight_file("flight_info.txt");
-
-    // Check if file opened successfully
-    if (flight_file.fail())
-    {
-        cout << "File failed to open" << endl;
-        exit(1);
-    }
 
     // Populate airline with flights from file
-    populate_flight_from_file(flight_file, airline);
+    populate_flight_from_file(airline);
 
     int input;
     string flight_id;
@@ -315,7 +248,7 @@ void menu(string airline_name = "WesJet")
             break;
         }
     }
-    flight_file.close();
+
     return;
 }
 
