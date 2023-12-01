@@ -26,7 +26,7 @@ void display_header()
     cin.get();
 }
 
-void populate_flight_from_file(ifstream &flight_file, Airline &airline)
+Flight populate_flight_from_file(ifstream &flight_file, Airline &airline)
 {
 
     string airline_info;
@@ -89,9 +89,9 @@ void populate_flight_from_file(ifstream &flight_file, Airline &airline)
         flight.add_passenger(passenger);
     }
 
-    // Add flight to airline
-    airline.addFlight(flight);
     flight_file.close();
+
+    return flight;
 }
 
 void changeFlight(string &flight_id, Airline &airline)
@@ -102,7 +102,7 @@ void changeFlight(string &flight_id, Airline &airline)
     cin >> flight_id;
     cout << endl;
     cout << "Flight changed successfully" << endl;
-    cout << "\n<<Press any key to continue>> ";
+    cout << "\n<<Press enter to continue" << endl;
     cin.clear();
     cin.ignore();
     cin.get();
@@ -111,7 +111,7 @@ void changeFlight(string &flight_id, Airline &airline)
 void displayFlightSeatMap(string &flight_id, Airline &airline)
 {
     airline.getFlight(flight_id).showFlightSeatMap();
-    cout << "\n<<Press any key to continue>> ";
+    cout << "\n<<Press enter to continue>> ";
     cin.clear();
     cin.ignore();
     cin.get();
@@ -120,7 +120,7 @@ void displayFlightSeatMap(string &flight_id, Airline &airline)
 void displayPassengerInfo(string &flight_id, Airline &airline)
 {
     airline.getFlight(flight_id).showInfo();
-    cout << "\n<<Press any key to continue>> ";
+    cout << "\n<<Press enter to continue>> ";
     cin.clear();
     cin.ignore();
     cin.get();
@@ -156,7 +156,7 @@ void addNewPassenger(string &flight_id, Airline &airline)
     cout << "Here is the passenger's information:" << endl;
     airline.getFlight(flight_id).getPassenger(id).showInfo();
 
-    cout << "\n<<Press any key to continue>> ";
+    cout << "\n<<Press enter to continue>> ";
     cin.clear();
     cin.ignore();
     cin.get();
@@ -177,7 +177,7 @@ void removePassenger(string &flight_id, Airline &airline)
     airline.getFlight(flight_id).remove_passenger(airline.getFlight(flight_id).getPassenger(passengerID));
 
     cout << "Passenger removed successfully" << endl;
-    cout << "\n<<Press any key to continue>> ";
+    cout << "\n<<Press enter to continue>> ";
     cin.clear();
     cin.ignore();
     cin.get();
@@ -194,20 +194,20 @@ void saveData(string &flight_id, Airline &airline)
     if (flight_file.fail())
     {
         cout << "File failed to open" << endl;
-        exit(1);
+        return;
     }
 
     airline.showInfo(flight_file);
 
     flight_file.close();
     cout << "Data saved successfully" << endl;
-    cout << "\n<<Press any key to continue>> ";
+    cout << "\n<<Press enter to continue>> ";
     cin.clear();
     cin.ignore();
     cin.get();
 }
 
-void addFlightFromFile(Airline &airline)
+Flight addFlightFromFile(Airline &airline)
 {
     string file_name;
     cout << "Enter the file name: ";
@@ -218,15 +218,11 @@ void addFlightFromFile(Airline &airline)
     if (flight_file.fail())
     {
         cout << "File failed to open" << endl;
-        return;
+        return Flight();
     }
 
-    populate_flight_from_file(flight_file, airline);
-    cout << "Flight added successfully" << endl;
-    cout << "\n<<Press any key to continue>> ";
-    cin.clear();
-    cin.ignore();
-    cin.get();
+    Flight flight = populate_flight_from_file(flight_file, airline);
+    return flight;
 }
 
 void menu(string airline_name = "WesJet")
@@ -243,7 +239,8 @@ void menu(string airline_name = "WesJet")
     }
 
     // Populate airline with flights from file
-    populate_flight_from_file(flight_file, airline);
+    Flight flight = populate_flight_from_file(flight_file, airline);
+    airline.addFlight(flight);
 
     int input;
     string flight_id;
@@ -305,7 +302,14 @@ void menu(string airline_name = "WesJet")
                 break;
 
             case 7:
-                addFlightFromFile(airline);
+                Flight flight = addFlightFromFile(airline);
+                airline.addFlight(flight);
+                cout << "Flight added successfully" << endl;
+                cout << "\n<<Press enter to continue>> ";
+                cin.clear();
+                cin.ignore();
+                cin.get();
+
                 break;
             }
         }
