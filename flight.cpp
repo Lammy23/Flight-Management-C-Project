@@ -6,7 +6,8 @@
 
 using namespace std;
 
-Flight::Flight() : flight_id(""), rows(0), columns(0), head(nullptr) {
+Flight::Flight() : flight_id(""), rows(0), columns(0), head(nullptr)
+{
     seat_map.resize(rows, vector<Seat>(columns));
 }
 
@@ -230,6 +231,7 @@ void Flight::showInfo(ostream &stream)
         // cout << curr->passenger.getFirstName() << " " << curr->passenger.getLastName() << endl;
         curr = curr->next;
     }
+    stream << endl;
 }
 
 void Flight::showFlightSeatMap()

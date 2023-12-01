@@ -141,7 +141,7 @@ void Airline::showInfo(ostream &stream)
 {
     stream << airline_name << endl;
     stream << "Number of flights: " << num_flights << endl;
-    cout << endl;
+    stream << endl;
 
     FlightNode *curr = head;
 
@@ -150,7 +150,7 @@ void Airline::showInfo(ostream &stream)
         curr->flight.showInfo(stream);
         curr = curr->next;
     }
-    cout << endl;
+    stream << endl;
 }
 
 void Airline::addFlightFromFile()
