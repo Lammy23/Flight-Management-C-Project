@@ -6,7 +6,7 @@
 
 #include "passenger.h"
 
-typedef vector<vector<string>> SeatMap;
+typedef vector<vector<Seat>> SeatMap;
 
 class PassengerNode
 {
@@ -27,12 +27,8 @@ private:
     SeatMap seat_map;
 
 public:
-
-    Flight(string flight_id, int rows, int columns) : flight_id(flight_id), rows(rows), columns(columns), head(nullptr)
-    {
-
-        seat_map.resize(rows, vector<string>(columns, " "));
-    }
+    Flight();
+    Flight(string flight_id, int rows, int columns);
 
     ~Flight();
     Flight(const Flight &flight);
@@ -44,7 +40,7 @@ public:
     const int get_rows() const { return rows; };
     const int get_columns() const { return columns; };
     Passenger getPassenger(int passenger_id);
-    string* getSeat(int row, int column);
+    Seat *getSeat(char col, int row);
 
     void set_flight_id(string flight_id) { this->flight_id = flight_id; };
     void set_rows(int rows) { this->rows = rows; };
@@ -54,7 +50,7 @@ public:
     void remove_passenger(Passenger passenger);
 
     void showFlightSeatMap();
-    void showFlightPassengerList();
+    void showInfo();
 };
 
 #endif // FLIGHT_H

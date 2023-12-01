@@ -24,7 +24,6 @@ private:
     FlightNode *head;
     int num_flights;
 
-
 public:
     Airline(string airline_name) : airline_name(airline_name), head(nullptr), num_flights(0) {}
     ~Airline();

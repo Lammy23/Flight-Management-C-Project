@@ -6,6 +6,21 @@
 
 using namespace std;
 
+Flight::Flight() : flight_id(""), rows(0), columns(0), head(nullptr) {}
+
+Flight::Flight(string flight_id, int rows, int columns) : flight_id(flight_id), rows(rows), columns(columns), head(nullptr)
+{
+
+    seat_map.resize(rows, vector<Seat>(columns));
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < columns; ++j)
+        {
+            seat_map[i][j] = Seat(i + 1, (char)'A' + j);
+        }
+    }
+}
+
 Flight::~Flight()
 {
     PassengerNode *curr = head;
@@ -88,12 +103,21 @@ Passenger Flight::getPassenger(int passenger_id)
     return Passenger();
 }
 
-string *Flight::getSeat(int row, int column)
+Seat *Flight::getSeat(char col, int row)
 {
-    return &seat_map[row][column];
+    int col_index = (int)col - (int)'A';
+    int row_index = row - 1;
+
+    if (col_index < 0 || col_index >= columns || row_index < 0 || row_index >= rows)
+    {
+        cout << "Invalid seat" << endl;
+        return nullptr;
+    }
+
+    return &seat_map[row_index][col_index];
 }
 
-void Flight::add_passenger(Passenger passenger)
+void Flight::add_passenger(const Passenger passenger)
 {
     PassengerNode *newNode = new PassengerNode(passenger);
     newNode->next = head;
@@ -127,13 +151,28 @@ void Flight::remove_passenger(Passenger passenger)
     }
 }
 
-void Flight::showFlightPassengerList()
+void Flight::showInfo()
 {
     PassengerNode *curr = head;
 
+    cout << setw(20) << left << "First Name" << setw(20) << left << "Last Name" << setw(20) << left << "Phone Number" << setw(5) << left << "Row" << setw(5) << left << "Seat" << setw(10) << left << "ID" << endl;
+    
+    for (int i = 0; i < 80; ++i)
+    {
+        cout << "-";
+    }
+    cout << endl;
+
     while (curr != nullptr)
     {
-        cout << curr->passenger.getFirstName() << " " << curr->passenger.getLastName() << endl;
+        curr->passenger.showInfo();
+        for (int i = 0; i < 80; ++i)
+        {
+            cout << "-";
+        }
+        cout << endl;
+
+        // cout << curr->passenger.getFirstName() << " " << curr->passenger.getLastName() << endl;
         curr = curr->next;
     }
 }
@@ -162,7 +201,7 @@ void Flight::showFlightSeatMap()
         cout << setw(2) << i + 1 << " ";
         for (int j = 0; j < columns; ++j)
         {
-            cout << "| " << (seat_map[i][j] == " " ? ' ' : 'X') << " ";
+            cout << "| " << (seat_map[i][j].getStatus() == false ? ' ' : 'X') << " ";
         }
         cout << "|\n   ";
 

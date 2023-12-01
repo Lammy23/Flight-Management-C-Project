@@ -126,6 +126,7 @@ Flight Airline::getFlight(string flight_id)
 
     if (curr == nullptr)
     {
+        cout << "Flight not found" << endl;
         return Flight("", 0, 0);
     }
 

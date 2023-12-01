@@ -13,11 +13,11 @@ private:
     string firstName;
     string lastName;
     string phoneNumber;
-    string *passengerSeat;
+    Seat *passengerSeat;
 
 public:
     Passenger();
-    Passenger(int id, string fName, string lName, string phone, string *seat);
+    Passenger(int id, string fName, string lName, string phone, Seat *seat);
     Passenger(const Passenger &other);
     bool operator==(const Passenger &other) const { return passengerID == other.passengerID; };
     bool operator!=(const Passenger &other) const { return passengerID != other.passengerID; };
@@ -26,13 +26,15 @@ public:
     string getFirstName() const;
     string getLastName() const;
     string getPhoneNumber() const;
-    string *getPassengerSeat() const;
+    Seat *getPassengerSeat() const;
 
     void setPassengerID(int id);
     void setFirstName(const string &fName);
     void setLastName(const string &lName);
     void setPhoneNumber(string phone);
-    void setPassengerSeat(string *seat);
+    void setPassengerSeat(Seat *seat);
+
+    void showInfo();
 };
 
 #endif // PASSENGER_H
