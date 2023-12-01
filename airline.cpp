@@ -19,10 +19,10 @@ Airline::~Airline()
     }
 }
 
-Airline::Airline(const Airline &airline)
-{
+Airline::Airline(const Airline &airline) {
+    cout  << "Copy constructor called" << endl;
     airline_name = airline.airline_name;
-    head = nullptr;
+    num_flights = airline.num_flights;
 
     FlightNode *curr = airline.head;
 
@@ -41,6 +41,7 @@ Airline &Airline::operator=(const Airline &airline)
     }
 
     airline_name = airline.airline_name;
+    num_flights = airline.num_flights;
 
     FlightNode *curr = head;
     FlightNode *next = nullptr;
@@ -65,14 +66,15 @@ Airline &Airline::operator=(const Airline &airline)
     return *this;
 }
 
-void Airline::addFlight(Flight flight)
+void Airline::addFlight(Flight &flight)
 {
     FlightNode *newNode = new FlightNode(flight);
     newNode->next = head;
     head = newNode;
+    num_flights++;
 }
 
-void Airline::removeFlight(Flight flight)
+void Airline::removeFlight(Flight &flight)
 {
     FlightNode *curr = head;
     FlightNode *prev = nullptr;
@@ -98,6 +100,7 @@ void Airline::removeFlight(Flight flight)
     }
 
     delete curr;
+    num_flights--;
 }
 
 void Airline::showAirlineFlightList()
@@ -111,7 +114,7 @@ void Airline::showAirlineFlightList()
     }
 }
 
-Flight Airline::findFlight(string flight_id)
+Flight &Airline::getFlight(string flight_id)
 {
     FlightNode *curr = head;
 
@@ -122,8 +125,25 @@ Flight Airline::findFlight(string flight_id)
 
     if (curr == nullptr)
     {
-        return Flight("", 0, 0);
+        cout << "Flight not found" << endl;
+        static Flight dummy_flight("", 0, 0);
+        return dummy_flight;
     }
 
     return curr->flight;
+}
+
+void Airline::showInfo(ostream &stream)
+{
+    stream << airline_name << endl;
+    stream << "Number of flights: " << num_flights << endl;
+    cout << endl;
+
+    FlightNode *curr = head;
+
+    while (curr != nullptr)
+    {
+        curr->flight.showInfo(stream);
+        curr = curr->next;
+    }
 }

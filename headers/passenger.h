@@ -1,15 +1,10 @@
 #ifndef PASSENGER_H
 #define PASSENGER_H
-
-#include <iostream>
 #include <string>
-#include <vector>
-
-#include "seat.h" // Lami added this line of code
 
 using namespace std;
 
-class Flight;
+#include "seat.h"
 
 class Passenger
 {
@@ -17,26 +12,30 @@ private:
     int passengerID;
     string firstName;
     string lastName;
-    int phoneNumber;
-    Flight *passengerSeat; // FLIGHT CLASS
+    string phoneNumber;
+    Seat *passengerSeat;
 
 public:
-    Passenger(int id, string fName, string lName, int phone, Seat *seat);
+    Passenger();
+    Passenger(int id, string fName, string lName, string phone, Seat *seat);
     Passenger(const Passenger &other);
-    ~Passenger() {}
+    ~Passenger();
+    bool operator==(const Passenger &other) const { return passengerID == other.passengerID; };
+    bool operator!=(const Passenger &other) const { return passengerID != other.passengerID; };
 
-    int getPassengerID() const { return passengerID; }
-    string getFirstName() const { return firstName; }
-    string getLastName() const { return lastName; }
-    int getPhoneNumber() const { return phoneNumber; }
-    Flight *getPassengerSeat() const { return passengerSeat; }
+    int getPassengerID() const { return passengerID; };
+    string getFirstName() const { return firstName; };
+    string getLastName() const { return lastName; };
+    string getPhoneNumber() const { return phoneNumber; };
+    Seat *getPassengerSeat() const { return passengerSeat; };
 
-    void setPassengerID(int id) { passengerID = id; }
-    void setFirstName(const string &fName) { firstName = fName; }
-    void setLastName(const string &lName) { lastName = lName; }
-    void setPhoneNumber(int phone) { phoneNumber = phone; }
-    // void setPassengerSeat(Seat* seat) { passengerSeat = seat; } // Lami commented this line of code
-    void showPassengerInfo(); // Lami added this line of code
+    void setPassengerID(int id) { passengerID = id; };
+    void setFirstName(string fName) { firstName = fName; };
+    void setLastName(string lName) { lastName = lName; };
+    void setPhoneNumber(string phone) { phoneNumber = phone; };
+    void setPassengerSeat(Seat *seat);
+
+    void showInfo(ostream &stream = cout);
 };
 
 #endif // PASSENGER_H
