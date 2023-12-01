@@ -19,11 +19,10 @@ Airline::~Airline()
     }
 }
 
-Airline::Airline(const Airline &airline)
-{
+Airline::Airline(const Airline &airline) {
+    cout  << "Copy constructor called" << endl;
     airline_name = airline.airline_name;
     num_flights = airline.num_flights;
-    head = nullptr;
 
     FlightNode *curr = airline.head;
 

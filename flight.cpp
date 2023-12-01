@@ -6,7 +6,9 @@
 
 using namespace std;
 
-Flight::Flight() : flight_id(""), rows(0), columns(0), head(nullptr) {}
+Flight::Flight() : flight_id(""), rows(0), columns(0), head(nullptr) {
+    seat_map.resize(rows, vector<Seat>(columns));
+}
 
 Flight::Flight(string flight_id, int rows, int columns) : flight_id(flight_id), rows(rows), columns(columns), head(nullptr)
 {

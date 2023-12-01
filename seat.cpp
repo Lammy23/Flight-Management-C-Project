@@ -4,9 +4,7 @@
 
 using namespace std;
 
-Seat::Seat(int rowNum, char colLetter) : rowNumber(rowNum), columnLetter(colLetter), is_occupied(false) {
-    cout << "Seat constructor called" << endl;
-}
+Seat::Seat(int rowNum, char colLetter) : rowNumber(rowNum), columnLetter(colLetter), is_occupied(false) {}
 
 Seat::Seat(const Seat &other)
 {

@@ -80,9 +80,10 @@ void populate_flight_from_file(ifstream &flight_file, Airline &airline)
         // Split seat into row and column
         istringstream seat_stream(seat);
         seat_stream >> seatrow >> seatcol;
+        Seat *flight_seat = flight.getSeat(seatcol, seatrow);
 
         // Create a passenger object
-        Passenger passenger(passenger_id, first_name, last_name, phone_number, flight.getSeat(seatcol, seatrow));
+        Passenger passenger(passenger_id, first_name, last_name, phone_number, flight_seat);
 
         // Add passenger to flight
         flight.add_passenger(passenger);
@@ -90,6 +91,8 @@ void populate_flight_from_file(ifstream &flight_file, Airline &airline)
 
     // Add flight to airline
     airline.addFlight(flight);
+    flight_file.close();
+    return;
 }
 
 void displayFlightSeatMap(string flight_id, Airline &airline)
@@ -170,7 +173,6 @@ void removePassenger(string flight_id, Airline &airline)
 void saveData(string flight_id, Airline &airline)
 {
     string file_name;
-    Flight &flight = airline.getFlight(flight_id);
     cout << "Where would you like to save the data? (Enter the file name):";
     cin >> file_name;
 
@@ -275,8 +277,9 @@ int main(void)
     }
 
     populate_flight_from_file(flight_file, airline);
-
     menu(airline);
+
+    flight_file.close();
 
     return 0;
 }
