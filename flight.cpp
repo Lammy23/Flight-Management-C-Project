@@ -6,7 +6,8 @@
 
 using namespace std;
 
-Flight::Flight() : flight_id(""), rows(0), columns(0), head(nullptr) {
+Flight::Flight() : flight_id(""), rows(0), columns(0), head(nullptr)
+{
     seat_map.resize(rows, vector<Seat>(columns));
 }
 
@@ -42,14 +43,37 @@ Flight::Flight(const Flight &flight)
     rows = flight.rows;
     columns = flight.columns;
     head = nullptr;
-    seat_map = flight.seat_map;
-
-    PassengerNode *curr = flight.head;
-
-    while (curr != nullptr)
+    seat_map.clear();
+    seat_map.resize(flight.rows, vector<Seat>(flight.columns));
+    for (int i = 0; i < flight.rows; i++)
     {
-        add_passenger(curr->passenger);
-        curr = curr->next;
+        for (int j = 0; j < flight.columns; ++j)
+        {
+            seat_map[i][j] = flight.seat_map[i][j];
+        }
+    }
+
+    if (flight.head != nullptr) {
+        PassengerNode *curr = flight.head;
+        PassengerNode *newHead = new PassengerNode(curr->passenger);
+        PassengerNode *newCurr = newHead;
+
+        while (curr->next != nullptr) {
+            curr = curr->next;
+            newCurr->next = new PassengerNode(curr->passenger);
+            newCurr = newCurr->next;
+        }
+
+        // Clean up existing passenger nodes
+        PassengerNode *temp = head;
+        while (temp != nullptr) {
+            PassengerNode *next = temp->next;
+            delete temp;
+            temp = next;
+        }
+
+        // Update head and tail pointers
+        head = newHead;
     }
 }
 
@@ -139,8 +163,6 @@ void Flight::add_passenger(Passenger &passenger)
     }
 
     PassengerNode *new_node = new PassengerNode(passenger, nullptr);
-    // new_node->passenger = passenger;
-    // new_node->next = nullptr;
 
     if (prev == nullptr)
     {

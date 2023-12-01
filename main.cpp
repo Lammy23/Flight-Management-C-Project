@@ -45,7 +45,7 @@ void populate_flight_from_file(ifstream &flight_file, Airline &airline)
     iss >> flight_id >> rows >> columns;
 
     // Create a flight object
-    Flight flight(flight_id, rows, columns);
+    Flight* flight = new Flight(flight_id, rows, columns);
 
     // Get the passenger info
     while (getline(flight_file, passenger_info))
@@ -80,17 +80,17 @@ void populate_flight_from_file(ifstream &flight_file, Airline &airline)
         // Split seat into row and column
         istringstream seat_stream(seat);
         seat_stream >> seatrow >> seatcol;
-        Seat *flight_seat = flight.getSeat(seatcol, seatrow);
+        Seat *flight_seat = (*flight).getSeat(seatcol, seatrow);
 
         // Create a passenger object
         Passenger passenger(passenger_id, first_name, last_name, phone_number, flight_seat);
 
         // Add passenger to flight
-        flight.add_passenger(passenger);
+        (*flight).add_passenger(passenger);
     }
 
     // Add flight to airline
-    airline.addFlight(flight);
+    airline.addFlight(*flight);
     flight_file.close();
 }
 

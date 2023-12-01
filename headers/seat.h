@@ -9,7 +9,7 @@ private:
     bool is_occupied;
 
 public:
-    Seat() : rowNumber(0), columnLetter(' '), is_occupied(false){}; // Needs work
+    Seat() : rowNumber(1), columnLetter(' '), is_occupied(false){}; // Needs work
     Seat(int rowNum, char colLetter);
     Seat(const Seat &other);
     Seat &operator=(const Seat &other);
