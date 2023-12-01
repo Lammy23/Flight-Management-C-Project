@@ -48,9 +48,9 @@ void populate_flight_from_file(ifstream &flight_file, Airline &airline)
     Flight flight(flight_id, rows, columns);
 
     // Get the passenger info
-    while (!flight_file.eof())
+    while (getline(flight_file, passenger_info))
     {
-        getline(flight_file, passenger_info);
+        // getline(flight_file, passenger_info);
         // Extract passenger information
         istringstream iss(passenger_info);
         string field;
@@ -92,10 +92,24 @@ void populate_flight_from_file(ifstream &flight_file, Airline &airline)
     // Add flight to airline
     airline.addFlight(flight);
     flight_file.close();
-    return;
+
 }
 
-void displayFlightSeatMap(string flight_id, Airline &airline)
+void changeFlight(string &flight_id, Airline &airline)
+{
+    cout << "Which flight would you like to manage?" << endl;
+    airline.showAirlineFlightList();
+    cout << "Enter flight ID: ";
+    cin >> flight_id;
+    cout << endl;
+    cout << "Flight changed successfully" << endl;
+    cout << "\n<<Press any key to continue>> ";
+    cin.clear();
+    cin.ignore();
+    cin.get();
+}
+
+void displayFlightSeatMap(string &flight_id, Airline &airline)
 {
     airline.getFlight(flight_id).showFlightSeatMap();
     cout << "\n<<Press any key to continue>> ";
@@ -104,7 +118,7 @@ void displayFlightSeatMap(string flight_id, Airline &airline)
     cin.get();
 }
 
-void displayPassengerInfo(string flight_id, Airline &airline)
+void displayPassengerInfo(string &flight_id, Airline &airline)
 {
     airline.getFlight(flight_id).showInfo();
     cout << "\n<<Press any key to continue>> ";
@@ -113,7 +127,7 @@ void displayPassengerInfo(string flight_id, Airline &airline)
     cin.get();
 }
 
-void addNewPassenger(string flight_id, Airline &airline)
+void addNewPassenger(string &flight_id, Airline &airline)
 {
     Flight &flight = airline.getFlight(flight_id);
     int id, row;
@@ -149,7 +163,7 @@ void addNewPassenger(string flight_id, Airline &airline)
     cin.get();
 }
 
-void removePassenger(string flight_id, Airline &airline)
+void removePassenger(string &flight_id, Airline &airline)
 {
     int passengerID;
     cout << "\nEnter the id of the passenger that needs to be removed: ";
@@ -170,7 +184,7 @@ void removePassenger(string flight_id, Airline &airline)
     cin.get();
 }
 
-void saveData(string flight_id, Airline &airline)
+void saveData(string &flight_id, Airline &airline)
 {
     string file_name;
     cout << "Where would you like to save the data? (Enter the file name):";
@@ -194,8 +208,44 @@ void saveData(string flight_id, Airline &airline)
     cin.get();
 }
 
-void menu(Airline &airline)
+void addFlightFromFile(Airline &airline)
 {
+    string file_name;
+    cout << "Enter the file name: ";
+    cin >> file_name;
+
+    ifstream flight_file(file_name);
+
+    if (flight_file.fail())
+    {
+        cout << "File failed to open" << endl;
+        return;
+    }
+
+    populate_flight_from_file(flight_file, airline);
+    cout << "Flight added successfully" << endl;
+    cout << "\n<<Press any key to continue>> ";
+    cin.clear();
+    cin.ignore();
+    cin.get();
+}
+
+void menu(string airline_name = "WesJet")
+{
+    Airline airline(airline_name);
+    // Open flight file
+    ifstream flight_file("flight_info.txt");
+
+    // Check if file opened successfully
+    if (flight_file.fail())
+    {
+        cout << "File failed to open" << endl;
+        exit(1);
+    }
+
+    // Populate airline with flights from file
+    populate_flight_from_file(flight_file, airline);
+
     int input;
     string flight_id;
     cout << "\n\nWelcome to the Flight Management Program!" << endl;
@@ -208,16 +258,18 @@ void menu(Airline &airline)
     while (true)
     {
         cout << "\nPlease select one of the following options:" << endl;
-        cout << "\n1. Display Flight Seat Map." << endl;
-        cout << "\n2. Display Passengers Information." << endl;
-        cout << "\n3. Add a new Passenger." << endl;
-        cout << "\n4. Remove an Existing Passenger." << endl;
-        cout << "\n5. Save data" << endl;
-        cout << "\n6. Quit." << endl;
-        cout << "\nEnter your choice: (1, 2, 3, 4, 5 or 6) ";
+        cout << "\n1. Change Flight." << endl;
+        cout << "\n2. Display Flight Seat Map." << endl;
+        cout << "\n3. Display Passengers Information." << endl;
+        cout << "\n4. Add a new Passenger." << endl;
+        cout << "\n5. Remove an Existing Passenger." << endl;
+        cout << "\n6. Save data to file" << endl;
+        cout << "\n7. Add a new Flight from file." << endl;
+        cout << "\n8. Quit." << endl;
+        cout << "\nEnter your choice: (1, 2, 3, 4, 5, 6, 7, or 8) ";
         cin >> input;
 
-        if (cin.fail() || input < 1 || input > 6)
+        if (cin.fail() || input < 1 || input > 8)
         {
             cin.clear();
 
@@ -230,24 +282,31 @@ void menu(Airline &airline)
                  << endl;
         }
 
-        else if (input >= 1 && input <= 5)
+        else if (input >= 1 && input <= 7)
         {
             switch (input)
             {
             case 1:
-                displayFlightSeatMap(flight_id, airline);
+                changeFlight(flight_id, airline);
                 break;
             case 2:
-                displayPassengerInfo(flight_id, airline);
+                displayFlightSeatMap(flight_id, airline);
                 break;
             case 3:
-                addNewPassenger(flight_id, airline);
+                displayPassengerInfo(flight_id, airline);
                 break;
             case 4:
-                removePassenger(flight_id, airline);
+                addNewPassenger(flight_id, airline);
                 break;
             case 5:
+                removePassenger(flight_id, airline);
+                break;
+            case 6:
                 saveData(flight_id, airline);
+                break;
+
+            case 7:
+                addFlightFromFile(airline);
                 break;
             }
         }
@@ -257,7 +316,7 @@ void menu(Airline &airline)
             break;
         }
     }
-
+    flight_file.close();
     return;
 }
 
@@ -266,20 +325,8 @@ int main(void)
 
     display_header();
 
-    Airline airline("WesJet");
-
-    ifstream flight_file("project-instructions/flight_info.txt");
-
-    if (flight_file.fail())
-    {
-        cout << "File failed to open" << endl;
-        exit(1);
-    }
-
-    populate_flight_from_file(flight_file, airline);
-    menu(airline);
-
-    flight_file.close();
+    // Display menu for WesJet
+    menu("WesJet");
 
     return 0;
 }

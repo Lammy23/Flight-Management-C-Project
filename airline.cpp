@@ -106,10 +106,11 @@ void Airline::removeFlight(Flight &flight)
 void Airline::showAirlineFlightList()
 {
     FlightNode *curr = head;
-
+    cout << "--------" << endl;
     while (curr != nullptr)
     {
         cout << curr->flight.get_flight_id() << endl;
+        cout << "--------" << endl;
         curr = curr->next;
     }
 }
@@ -146,4 +147,5 @@ void Airline::showInfo(ostream &stream)
         curr->flight.showInfo(stream);
         curr = curr->next;
     }
+    cout << endl;
 }
