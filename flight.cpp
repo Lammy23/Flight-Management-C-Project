@@ -172,14 +172,6 @@ void Flight::remove_passenger(Passenger &passenger)
             }
             curr->passenger.getPassengerSeat()->setStatus(false);
 
-            int row_index = curr->passenger.getPassengerSeat()->getRowNumber() - 1;
-            int col_index = (int)curr->passenger.getPassengerSeat()->getColumnLetter() - (int)'A';
-
-            if (row_index >= 0 && row_index < rows && col_index >= 0 && col_index < columns)
-            {
-                seat_map[row_index][col_index].setStatus(false);
-            }
-
             delete curr;
             break;
         }
