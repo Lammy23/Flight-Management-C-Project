@@ -252,12 +252,6 @@ void menu(Airline &airline)
 
     changeFlight(flight_id, airline);
 
-    // cout << "Which flight would you like to manage?" << endl;
-    // airline.showAirlineFlightList();
-    // cout << "Enter flight ID: ";
-    // cin >> flight_id;
-    // cout << endl;
-
     while (true)
     {
         cout << "\nPlease select one of the following options:" << endl;
