@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <limits>
 
 #include "headers/airline.h"
 #include "headers/flight.h"
@@ -26,26 +27,65 @@ void display_header()
     cin.get();
 }
 
-void populate_flight_from_file(Airline &airline)
+void populateFlightFromFile(Airline &airline)
 {
-    airline.addFlightFromFile();
-    cout << "Flight added successfully" << endl;
+    while (true)
+    {
+        string file_name;
+        cout << "Enter the file name (with .txt): ";
+        cin >> file_name;
+
+        if (airline.addFlightFromFile(file_name))
+        {
+            cout << "Flight added successfully" << endl;
+            break;
+        }
+
+        else
+            break;
+    }
+
     cout << "\n<<Press any key to continue>> ";
-    cin.clear();
     cin.ignore();
     cin.get();
 }
 
 void changeFlight(string &flight_id, Airline &airline)
 {
-    cout << "Which flight would you like to manage?" << endl;
-    airline.showAirlineFlightList();
-    cout << "Enter flight ID: ";
-    cin >> flight_id;
-    cout << endl;
-    cout << "Flight changed successfully" << endl;
+    while (true)
+    {
+        cout << "Which flight would you like to manage?" << endl;
+        vector<string> flight_list = airline.showAirlineFlightList();
+        bool flight_found = false;
+        cout << "Enter flight ID: ";
+        cin >> flight_id;
+
+        for (const string &saved_id : flight_list)
+        {
+            if (flight_id == saved_id)
+            {
+                flight_found = true;
+                break;
+            }
+        }
+
+        if (flight_found)
+        {
+            cout << "\nFlight changed successfully\n"
+                 << endl;
+            break;
+        }
+
+        else
+        {
+            cout << "\nFlight not found!\n"
+                 << endl;
+            continue;
+        }
+    }
+
     cout << "\n<<Press any key to continue>> ";
-    cin.clear();
+
     cin.ignore();
     cin.get();
 }
@@ -54,7 +94,6 @@ void displayFlightSeatMap(string &flight_id, Airline &airline)
 {
     airline.getFlight(flight_id).showFlightSeatMap();
     cout << "\n<<Press any key to continue>> ";
-    cin.clear();
     cin.ignore();
     cin.get();
 }
@@ -63,7 +102,7 @@ void displayPassengerInfo(string &flight_id, Airline &airline)
 {
     airline.getFlight(flight_id).showInfo();
     cout << "\n<<Press any key to continue>> ";
-    cin.clear();
+
     cin.ignore();
     cin.get();
 }
@@ -78,6 +117,14 @@ void addNewPassenger(string &flight_id, Airline &airline)
     cout << "Please enter the passenger ID: ";
     cin >> id;
 
+    if (cin.fail())
+    {
+        cout << "\nError! Invalid ID" << endl;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        return;
+    }
+
     cout << "Please enter the passenger first name: ";
     getline(cin >> ws, firstName);
 
@@ -87,16 +134,64 @@ void addNewPassenger(string &flight_id, Airline &airline)
     cout << "Please enter the passenger phone number: ";
     cin >> phoneNumber;
 
-    cout << "Enter the passenger's desired row: ";
-    cin >> row;
+    while (true)
+    {
 
-    cout << "Enter the passenger's desired seat: ";
-    cin >> seat;
+        cout << "Enter the passenger's desired row.\n(Please enter a number between 1 and " << flight.get_rows() << "): ";
+        cin >> row;
+
+        if (cin.fail())
+        {
+            cout << "\nError! Invalid row number" << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return;
+        }
+
+        cout << "Enter the passenger's desired seat.\n(Please enter a letter between A and " << (char)((int)'A' + flight.get_columns() - 1) << "): ";
+        cin >> seat;
+
+        if (cin.fail())
+        {
+            cout << "\nError! Invalid seat letter" << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return;
+        }
+
+        if (flight.isSeatAvailable(seat, row))
+        {
+            break;
+        }
+
+        else
+        {
+            cout << "\nSeat is not available\n"
+                 << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            continue;
+        }
+    }
 
     Passenger passenger(id, firstName, lastName, phoneNumber, flight.getSeat(seat, row));
-    airline.getFlight(flight_id).add_passenger(passenger);
-    cout << "Here is the passenger's information:" << endl;
-    airline.getFlight(flight_id).getPassenger(id).showInfo();
+    while (true)
+    {
+
+        if (airline.getFlight(flight_id).add_passenger(passenger))
+        {
+            cout << "Here is the passenger's information:\n"
+                 << endl;
+            airline.getFlight(flight_id).getPassenger(id).showInfo();
+            break;
+        }
+        else
+        {
+            cout << "Error adding passenger\n"
+                 << endl;
+            break;
+        }
+    }
 
     cout << "\n<<Press any key to continue>> ";
     cin.clear();
@@ -149,27 +244,19 @@ void saveData(string &flight_id, Airline &airline)
     cin.get();
 }
 
-void addFlightFromFile(Airline &airline)
+void menu(Airline &airline)
 {
-    populate_flight_from_file(airline);
-    cout << "Flight added successfully" << endl;
-}
-
-void menu(string airline_name = "WesJet")
-{
-    Airline airline(airline_name);
-
-    // Populate airline with flights from file
-    populate_flight_from_file(airline);
-
     int input;
     string flight_id;
     cout << "\n\nWelcome to the Flight Management Program!" << endl;
-    cout << "Which flight would you like to manage?" << endl;
-    airline.showAirlineFlightList();
-    cout << "Enter flight ID: ";
-    cin >> flight_id;
-    cout << endl;
+
+    changeFlight(flight_id, airline);
+
+    // cout << "Which flight would you like to manage?" << endl;
+    // airline.showAirlineFlightList();
+    // cout << "Enter flight ID: ";
+    // cin >> flight_id;
+    // cout << endl;
 
     while (true)
     {
@@ -222,7 +309,7 @@ void menu(string airline_name = "WesJet")
                 break;
 
             case 7:
-                addFlightFromFile(airline);
+                populateFlightFromFile(airline);
                 break;
             }
         }
@@ -241,8 +328,11 @@ int main(void)
 
     display_header();
 
+    Airline airline("WesJet");
+    airline.addFlightFromFile();
+
     // Display menu for WesJet
-    menu("WesJet");
+    menu(airline);
 
     return 0;
 }

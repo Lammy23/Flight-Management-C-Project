@@ -15,7 +15,6 @@ Passenger::Passenger(int id, string fName, string lName, string phone, Seat *sea
     firstName = fName;
     lastName = lName;
     phoneNumber = phone;
-    seat->setStatus(true);
     passengerSeat = seat;
     passengerSeat->setStatus(true);
 }

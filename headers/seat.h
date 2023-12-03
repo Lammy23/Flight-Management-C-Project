@@ -14,7 +14,6 @@ public:
     Seat(const Seat &other);
     Seat &operator=(const Seat &other);
 
-
     const int getRowNumber() const { return rowNumber; };
     const char getColumnLetter() const { return columnLetter; }
     const bool getStatus() const { return is_occupied; };

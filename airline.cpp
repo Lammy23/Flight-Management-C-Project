@@ -106,16 +106,22 @@ void Airline::removeFlight(Flight &flight)
     num_flights--;
 }
 
-void Airline::showAirlineFlightList()
+vector<string> Airline::showAirlineFlightList()
 {
+    vector<string> flight_list;
+
     FlightNode *curr = head;
     cout << "--------" << endl;
     while (curr != nullptr)
     {
-        cout << curr->flight.get_flight_id() << endl;
+        string flight_id = curr->flight.get_flight_id();
+        flight_list.push_back(flight_id);
+        cout << flight_id << endl;
         cout << "--------" << endl;
         curr = curr->next;
     }
+
+    return flight_list;
 }
 
 Flight &Airline::getFlight(string flight_id)
@@ -153,19 +159,15 @@ void Airline::showInfo(ostream &stream)
     stream << endl;
 }
 
-void Airline::addFlightFromFile()
+int Airline::addFlightFromFile(string file_name)
 {
-    string file_name;
-    cout << "Enter the file name: ";
-    cin >> file_name;
-
     ifstream flight_file(file_name);
 
     // Check if file opened successfully
     if (flight_file.fail())
     {
         cout << "File failed to open" << endl;
-        return;
+        return 0;
     }
 
     string airline_info;
@@ -229,5 +231,5 @@ void Airline::addFlightFromFile()
     }
 
     flight_file.close();
+    return 1;
 }
-

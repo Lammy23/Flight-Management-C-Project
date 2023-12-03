@@ -47,12 +47,13 @@ public:
     void set_rows(int rows) { this->rows = rows; };
     void set_columns(int columns) { this->columns = columns; };
 
-    void add_passenger(Passenger &passenger);
+    int add_passenger(Passenger &passenger);
     void remove_passenger(Passenger &passenger);
     int count_passengers();
 
     void showFlightSeatMap();
     void showInfo(ostream &stream = cout);
+    bool isSeatAvailable(char col, int row);
 };
 
 #endif // FLIGHT_H

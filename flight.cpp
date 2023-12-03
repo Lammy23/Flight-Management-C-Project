@@ -122,7 +122,7 @@ Seat *Flight::getSeat(char col, int row)
     return &seat_map[row_index][col_index];
 }
 
-void Flight::add_passenger(Passenger &passenger)
+int Flight::add_passenger(Passenger &passenger)
 {
     PassengerNode *curr = head;
     PassengerNode *prev = nullptr;
@@ -131,8 +131,8 @@ void Flight::add_passenger(Passenger &passenger)
     {
         if (curr->passenger == passenger)
         {
-            cout << "Passenger already exists" << endl;
-            return;
+            cout << "\nPassenger ID already exists\n" << endl;
+            return 0;
         }
 
         prev = curr;
@@ -140,8 +140,6 @@ void Flight::add_passenger(Passenger &passenger)
     }
 
     PassengerNode *new_node = new PassengerNode(passenger, nullptr);
-    // new_node->passenger = passenger;
-    // new_node->next = nullptr;
 
     if (prev == nullptr)
     {
@@ -151,6 +149,8 @@ void Flight::add_passenger(Passenger &passenger)
     {
         prev->next = new_node;
     }
+
+    return 1;
 }
 
 void Flight::remove_passenger(Passenger &passenger)
@@ -171,14 +171,6 @@ void Flight::remove_passenger(Passenger &passenger)
                 prev->next = curr->next;
             }
             curr->passenger.getPassengerSeat()->setStatus(false);
-
-            int row_index = curr->passenger.getPassengerSeat()->getRowNumber() - 1;
-            int col_index = (int)curr->passenger.getPassengerSeat()->getColumnLetter() - (int)'A';
-
-            if (row_index >= 0 && row_index < rows && col_index >= 0 && col_index < columns)
-            {
-                seat_map[row_index][col_index].setStatus(false);
-            }
 
             delete curr;
             break;
@@ -268,4 +260,18 @@ void Flight::showFlightSeatMap()
         }
         cout << "+\n";
     }
+}
+
+bool Flight::isSeatAvailable(char col, int row)
+{
+    int col_index = (int)col - (int)'A';
+    int row_index = row - 1;
+
+    if (col_index < 0 || col_index >= columns || row_index < 0 || row_index >= rows)
+    {
+        cout << "Invalid seat" << endl;
+        return false;
+    }
+
+    return !seat_map[row_index][col_index].getStatus();
 }
