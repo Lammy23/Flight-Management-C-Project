@@ -36,10 +36,10 @@ public:
     Flight &getFlight(string flight_id);
 
     void addFlight(Flight &flight);
-    void addFlightFromFile();
+    int addFlightFromFile(string file_name = "flight_info.txt");
     void removeFlight(Flight &flight);
 
-    void showAirlineFlightList();
+    vector<string> showAirlineFlightList();
     void showInfo(ostream &stream = cout);
 };
 
